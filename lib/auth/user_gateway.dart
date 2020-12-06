@@ -50,21 +50,21 @@ class UserGateway {
 }
 
 class User {
-  final String id;
+  final String uid;
   final String displayName;
   final String photoUrl;
   final String email;
   final bool emailVerified;
 
   User.fromMap(Map<String, dynamic> map)
-      : id = map['localId'],
+      : uid = map['localId'],
         displayName = map['displayName'],
         photoUrl = map['photoUrl'],
         email = map['email'],
         emailVerified = map['emailVerified'];
   
     Map<String, dynamic> toJson() => {
-        "localId": id ?? '',
+        "localId": uid ?? '',
         "displayName": displayName ?? '',
         "photoUrl": photoUrl ?? '',
         "email": email ?? '',
@@ -73,5 +73,5 @@ class User {
 
   @override
   String toString() =>
-      'id: $id, name: $displayName, photo: $photoUrl, email: $email, emailVerified: $emailVerified';
+      'uid: $uid, name: $displayName, photo: $photoUrl, email: $email, emailVerified: $emailVerified';
 }
