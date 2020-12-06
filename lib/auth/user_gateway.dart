@@ -62,6 +62,14 @@ class User {
         photoUrl = map['photoUrl'],
         email = map['email'],
         emailVerified = map['emailVerified'];
+  
+    Map<String, dynamic> toJson() => {
+        "localId": id ?? '',
+        "displayName": displayName ?? '',
+        "photoUrl": photoUrl ?? '',
+        "email": email ?? '',
+        "emailVerified": emailVerified ?? '',
+      };
 
   @override
   String toString() =>
