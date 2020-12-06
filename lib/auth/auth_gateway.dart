@@ -52,7 +52,7 @@ class AuthGateway {
     if (response.statusCode != 200) {
       throw Exception('${response.statusCode}: ${response.reasonPhrase}');
     }
-    print('response ${json.decode(response.body)['idToken']}');
+//     print('response ${json.decode(response.body)['idToken']}');
     return json.decode(response.body);
   }
 }
