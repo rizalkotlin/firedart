@@ -4,11 +4,9 @@ import 'package:firedart/auth/token_provider.dart';
 import 'package:http/http.dart' as http;
 
 class VerboseClient extends http.BaseClient {
-  http.Client _client;
+  final http.Client _client;
 
-  VerboseClient() {
-    _client = http.Client();
-  }
+  VerboseClient() : _client = http.Client();
 
   @override
   Future<http.StreamedResponse> send(http.BaseRequest request) async {
@@ -18,7 +16,7 @@ class VerboseClient extends http.BaseClient {
 
     var response = await _client.send(request);
     print(
-        '<-- ${response.statusCode} ${response.reasonPhrase} ${response.request.url}');
+        '<-- ${response.statusCode} ${response.reasonPhrase} ${response.request?.url}');
     var loggedStream = response.stream.map((event) {
       print(utf8.decode(event));
       return event;
@@ -65,9 +63,10 @@ class UserClient extends http.BaseClient {
 
   @override
   Future<http.StreamedResponse> send(http.BaseRequest request) async {
+    var body = (request as http.Request).bodyFields;
     request = http.Request(request.method, request.url)
       ..headers['content-type'] = 'application/x-www-form-urlencoded'
-      ..bodyFields = {'idToken': await tokenProvider.idToken};
+      ..bodyFields = {...body, 'idToken': await tokenProvider.idToken};
     return client.send(request);
   }
 }

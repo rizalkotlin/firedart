@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:firedart/auth/client.dart';
 import 'package:firedart/auth/token_provider.dart';
 
+import 'exceptions.dart';
 import 'user_gateway.dart';
 
 class AuthGateway {
@@ -12,22 +13,22 @@ class AuthGateway {
   AuthGateway(this.client, this.tokenProvider);
 
   Future<User> signUp(String email, String password) async =>
-      _auth('signUp', email, password);
+      _auth('signUp', {'email': email, 'password': password});
 
   Future<User> signIn(String email, String password) async =>
-      _auth('signInWithPassword', email, password);
+      _auth('signInWithPassword', {'email': email, 'password': password});
+
+  Future<User> signInAnonymously() async => _auth('signUp', {});
 
   Future<void> resetPassword(String email) => _post('sendOobCode', {
         'requestType': 'PASSWORD_RESET',
         'email': email,
       });
 
-  Future<User> _auth(String method, String email, String password,
-      {bool secureToken = true}) async {
+  Future<User> _auth(String method, Map<String, String> payload) async {
     var body = {
-      'email': email,
-      'password': password,
-      'returnSecureToken': '$secureToken',
+      ...payload,
+      'returnSecureToken': 'true',
     };
 
     var map = await _post(method, body);
@@ -39,20 +40,16 @@ class AuthGateway {
       String method, Map<String, String> body) async {
     var requestUrl =
         'https://identitytoolkit.googleapis.com/v1/accounts:$method';
+
     var response = await client.post(
-      requestUrl,
+      Uri.parse(requestUrl),
       body: body,
     );
 
-    // print('method $method');
-    // print('body $body url $requestUrl');
-    // print('response code ${response.statusCode}');
-    // print('response body ${response.body}');
-
     if (response.statusCode != 200) {
-      throw Exception('${response.statusCode}: ${response.reasonPhrase}');
+      throw AuthException(response.body);
     }
-//     print('response ${json.decode(response.body)['idToken']}');
+
     return json.decode(response.body);
   }
 }

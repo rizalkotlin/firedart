@@ -1,3 +1,45 @@
+## [0.9.0+1] - 07 April 2021.
+
+* Migrate code to NNBD
+* Update dependencies and regenerate RPC stubs
+
+## [0.8.3] - 26 October 2020.
+
+* Update dependencies and regenerate RPC stubs
+
+## [0.8.2] - 16 June 2020.
+
+* Add anonymous sign-in (thanks @bierbaumtim)
+
+## [0.8.1] - 12 June 2020.
+
+* Add SignedOutException when calling protected methods while signed out
+* Add AuthException with error details to all Auth calls
+
+## [0.8.0+1] - 02 June 2020.
+
+* Update documentation
+
+## [0.8.0] - 01 June 2020.
+
+* Implement collection queries (thanks @SwissCheese)
+* Improve translation between Dart and Firebase data types
+
+## [0.7.2] - 05 May 2020.
+
+* Logout user on account deletion
+
+## [0.7.1] - 05 May 2020.
+
+* Fix requesting email confirmation
+* Add User.toMap() method
+
+## [0.7.0] - 29 March 2020.
+
+* Implement paging
+* Expose document creation and update times
+* Fix collections only returning up to 20 documents
+
 ## [0.6.5] - 4 January 2020.
 
 * Return user on signup and signin

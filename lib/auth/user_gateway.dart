@@ -9,9 +9,8 @@ class UserGateway {
   UserGateway(KeyClient client, TokenProvider tokenProvider)
       : _client = UserClient(client, tokenProvider);
 
-  Future<void> requestEmailVerification() async => _post('sendOobCode', {
-        'requestType': 'VERIFY_EMAIL',
-      });
+  Future<void> requestEmailVerification() =>
+      _post('sendOobCode', {'requestType': 'VERIFY_EMAIL'});
 
   Future<User> getUser() async {
     var map = await _post('lookup', {});
@@ -24,7 +23,8 @@ class UserGateway {
     });
   }
 
-  Future<void> updateProfile(String displayName, String photoUrl) async {
+  Future<void> updateProfile(String? displayName, String? photoUrl) async {
+    assert(displayName != null || photoUrl != null);
     await _post('update', {
       if (displayName != null) 'displayName': displayName,
       if (photoUrl != null) 'photoUrl': photoUrl,
@@ -41,7 +41,7 @@ class UserGateway {
         'https://identitytoolkit.googleapis.com/v1/accounts:$method';
 
     var response = await _client.post(
-      requestUrl,
+      Uri.parse(requestUrl),
       body: body,
     );
 
@@ -50,28 +50,27 @@ class UserGateway {
 }
 
 class User {
-  final String uid;
-  final String displayName;
-  final String photoUrl;
-  final String email;
-  final bool emailVerified;
+  final String id;
+  final String? displayName;
+  final String? photoUrl;
+  final String? email;
+  final bool? emailVerified;
 
   User.fromMap(Map<String, dynamic> map)
-      : uid = map['localId'],
+      : id = map['localId'],
         displayName = map['displayName'],
         photoUrl = map['photoUrl'],
         email = map['email'],
         emailVerified = map['emailVerified'];
-  
-    Map<String, dynamic> toJson() => {
-        "localId": uid ?? '',
-        "displayName": displayName ?? '',
-        "photoUrl": photoUrl ?? '',
-        "email": email ?? '',
-        "emailVerified": emailVerified ?? '',
+
+  Map<String, dynamic> toMap() => {
+        'localId': id,
+        'displayName': displayName,
+        'photoUrl': photoUrl,
+        'email': email,
+        'emailVerified': emailVerified,
       };
 
   @override
-  String toString() =>
-      'uid: $uid, name: $displayName, photo: $photoUrl, email: $email, emailVerified: $emailVerified';
+  String toString() => toMap().toString();
 }

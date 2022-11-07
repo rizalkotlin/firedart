@@ -1,0 +1,30 @@
+name: Quality Gate
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: dart-lang/setup-dart@v1
+      - name: Load test credentials
+        run: |
+          echo "const apiKey = '${{ secrets.test_api_key }}';" > test/test_config.dart
+          echo "const projectId = '${{ secrets.test_project_id }}';" >> test/test_config.dart
+          echo "const email = '${{ secrets.test_email }}';" >> test/test_config.dart
+          echo "const password = '${{ secrets.test_password }}';" >> test/test_config.dart
+
+      - name: Verify code formatting
+        run: dart format --set-exit-if-changed .
+      - name: Get dependencies
+        run: pub get
+      - name: Static code analysis
+        run: dart analyze --fatal-infos
+      - name: Run tests
+        run: pub run test

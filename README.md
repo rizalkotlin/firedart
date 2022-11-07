@@ -6,7 +6,7 @@ A dart-native implementation of the Firebase Auth and Firestore SDKs.
 
 This library attempts to minimize dependencies with the intention of making it able to run in any environment capable of executing dart code. Currently it has been successfully tested using the dart runtime (`x86-64` and `arm32`) as well as on Flutter Android, iOS and Desktop.
 
-Currently the only supported services are `Firebase Auth` and `Firestore`.
+Firedart currently implements a subset of `Firebase Auth` and `Firestore`.
 
 ## Dependencies
 
@@ -19,7 +19,7 @@ dependencies:
 
 ## Firebase Auth
 
-The `FirebaseAuth` class implements the necessary functionality for managing accounts. It currently only supports `Email/Password` sign-in, so make sure it's enabled under `Authentication` -> `Sign-in Method`.
+The `FirebaseAuth` class implements the necessary functionality for managing accounts. It currently only supports `Email/Password` sign-in and `anonymous` sign-in, so make sure these are enabled under `Authentication` -> `Sign-in Method`.
 
 You'll also need to go to your `Firebase Console`, open `Project Settings` and under the `General` tab copy the `Web API Key`.
 
@@ -34,7 +34,7 @@ import 'package:firedart/firedart.dart';
 `FirebaseAuth` has a singleton version which should be enough for most use cases. You'll need to initialise it with your API key and a token store (see note above):
 
 ``` dart
-FirebaseAuth.initialize(apiKey, await HiveStore());
+FirebaseAuth.initialize(apiKey, await HiveStore.create());
 await FirebaseAuth.instance.signIn(email, password);
 var user = await FirebaseAuth.instance.getUser();
 ```
